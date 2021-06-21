@@ -1,28 +1,42 @@
 package contacts;
 
-import java.util.List;
+import contacts.action.Action;
+import contacts.action.ActionEnum;
+import contacts.action.ActionInvoker;
+import contacts.action.actions.*;
+
+import java.util.Map;
 import java.util.Scanner;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class ContactInteractionFacade {
 
-    public static void stage1() {
-        Scanner scanner = new Scanner(System.in);
-        List<String> data = Stream.of(
-                "Enter the name of the person:",
-                "Enter the surname of the person:",
-                "Enter the number:")
-                .map(prompt -> {
-                    System.out.println(prompt);
-                    return scanner.nextLine();
-                }).collect(Collectors.toList());
+    private static ActionEnum getAction(Scanner scanner) {
+        System.out.print("Enter action (add, remove, edit, count, list, exit): ");
+        return ActionEnum.fromString(scanner.nextLine());
+    }
 
-//        Contact contact = new Contact(data.get(0), data.get(1), data.get(2));
-//        Contacts contacts = new Contacts();
-//        contacts.saveContact(contact);
-//        ...
+    public static void stage2() {
+        try (Scanner scanner = new Scanner(System.in)) {
+            Contacts contacts = new Contacts();
 
-        System.out.println("\nA record created!\nA Phone Book with a single record created!");
+            Map<ActionEnum, Action> actionMap = Map.of(
+                    ActionEnum.ADD, new AddAction(contacts, scanner),
+                    ActionEnum.REMOVE, new RemoveAction(contacts, scanner),
+                    ActionEnum.EDIT, new EditAction(contacts, scanner),
+                    ActionEnum.COUNT, new CountAction(contacts),
+                    ActionEnum.LIST, new ListAction(contacts),
+                    ActionEnum.EXIT, () -> {}
+            );
+
+            ActionEnum actionEnum = getAction(scanner);
+            ActionInvoker invoker = new ActionInvoker(actionMap.get(actionEnum));
+
+            while (ActionEnum.EXIT != actionEnum) {
+                invoker.executeAction();
+
+                actionEnum = getAction(scanner);
+                invoker.setAction(actionMap.get(actionEnum));
+            }
+        }
     }
 }

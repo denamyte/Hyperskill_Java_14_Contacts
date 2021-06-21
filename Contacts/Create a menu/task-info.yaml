@@ -219,6 +219,114 @@ files:
     \        }\n        catch (Exception ex) {\n            return new CheckResult(false,\
     \ \"Can't check the answer\");\n        }\n    }\n}\n"
   learner_created: false
+- name: src/contacts/Contact.java
+  visible: true
+  text: |
+    package contacts;
+
+    public class Contact {
+
+        private final String name;
+        private final String surname;
+        private final String phone;
+
+        public Contact(String name, String surname, String phone) {
+            this.name = name;
+            this.surname = surname;
+            this.phone = phone;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public String getSurname() {
+            return surname;
+        }
+
+        public String getPhone() {
+            return phone;
+        }
+    }
+  learner_created: true
+- name: src/contacts/ContactInteractionFacade.java
+  visible: true
+  text: |
+    package contacts;
+
+    import java.util.List;
+    import java.util.Scanner;
+    import java.util.stream.Collectors;
+    import java.util.stream.Stream;
+
+    public class ContactInteractionFacade {
+
+        public static void stage1() {
+            Scanner scanner = new Scanner(System.in);
+            List<String> data = Stream.of(
+                    "Enter the name of the person:",
+                    "Enter the surname of the person:",
+                    "Enter the number:")
+                    .map(prompt -> {
+                        System.out.println(prompt);
+                        return scanner.nextLine();
+                    }).collect(Collectors.toList());
+
+    //        Contact contact = new Contact(data.get(0), data.get(1), data.get(2));
+    //        Contacts contacts = new Contacts();
+    //        contacts.saveContact(contact);
+    //        ...
+
+            System.out.println("\nA record created!\nA Phone Book with a single record created!");
+        }
+    }
+  learner_created: true
+- name: src/contacts/Contacts.java
+  visible: true
+  text: |
+    package contacts;
+
+    import java.util.ArrayList;
+    import java.util.Collection;
+
+    public class Contacts {
+        private final Collection<Contact> storage = new ArrayList<>();
+
+        public void saveContact(Contact contact) {
+            storage.add(contact);
+        }
+    }
+  learner_created: true
+- name: src/contacts/action/ActionInvoker.java
+  visible: true
+  learner_created: true
+- name: src/contacts/action/Action.java
+  visible: true
+  learner_created: true
+- name: src/contacts/action/ActionBase.java
+  visible: true
+  learner_created: true
+- name: src/contacts/action/actions/AddAction.java
+  visible: true
+  learner_created: true
+- name: src/contacts/action/actions/RemoveAction.java
+  visible: true
+  learner_created: true
+- name: src/contacts/action/actions/ListAction.java
+  visible: true
+  learner_created: true
+- name: src/contacts/action/actions/CountAction.java
+  visible: true
+  learner_created: true
+- name: src/contacts/action/actions/EditAction.java
+  visible: true
+  learner_created: true
+- name: src/contacts/action/ActionEnum.java
+  visible: true
+  learner_created: true
 feedback_link: https://hyperskill.org/projects/43/stages/229/implement#comment
-status: Unchecked
+status: Solved
+feedback:
+  message: Congratulations!
+  time: Mon, 21 Jun 2021 00:25:14 UTC
 record: -1
