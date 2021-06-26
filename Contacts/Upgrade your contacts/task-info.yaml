@@ -212,6 +212,410 @@ files:
     \      catch (Exception ex) {\n            return new CheckResult(false, \"Can't\
     \ check the answer\");\n        }\n    }\n}\n"
   learner_created: false
+- name: src/contacts/action/actions/RemoveAction.java
+  visible: true
+  text: |
+    package contacts.action.actions;
+
+    import contacts.Contacts;
+    import contacts.action.ActionBase;
+
+    import java.util.Scanner;
+
+    public class RemoveAction extends ActionBase {
+
+        public RemoveAction(Contacts contacts, Scanner scanner) {
+            super(contacts, scanner);
+        }
+
+        @Override
+        public void execute() {
+            if (contacts.size() == 0) {
+                System.out.println("No records to remove!");
+                return;
+            }
+            System.out.println(contacts);
+            System.out.print("Select a record: ");
+            int index = -1 + Integer.parseInt(scanner.nextLine());
+            contacts.remove(index);
+            System.out.println("The record removed!");
+        }
+    }
+  learner_created: true
+- name: src/contacts/action/ActionBase.java
+  visible: true
+  text: |
+    package contacts.action;
+
+    import contacts.Contact;
+    import contacts.Contacts;
+
+    import java.util.Scanner;
+
+    public abstract class ActionBase implements Action {
+
+        protected Contacts contacts;
+        protected Scanner scanner;
+
+        public ActionBase(Contacts contacts, Scanner scanner) {
+            this.contacts = contacts;
+            this.scanner = scanner;
+        }
+
+        protected void alertWrongNumber(Contact contact) {
+            if (!contact.hasNumber()) {
+                System.out.println("Wrong number format!");
+            }
+        }
+    }
+  learner_created: true
+- name: src/contacts/action/ActionEnum.java
+  visible: true
+  text: |
+    package contacts.action;
+
+    public enum ActionEnum {
+        ADD, REMOVE, EDIT, COUNT, LIST, EXIT;
+
+        public static ActionEnum fromString(String s) {
+            return valueOf(s.toUpperCase());
+        }
+    }
+  learner_created: true
+- name: src/contacts/action/actions/ListAction.java
+  visible: true
+  text: |
+    package contacts.action.actions;
+
+    import contacts.Contacts;
+    import contacts.action.ActionBase;
+
+    public class ListAction extends ActionBase {
+
+        public ListAction(Contacts contacts) {
+            super(contacts, null);
+        }
+
+        @Override
+        public void execute() {
+            System.out.println(contacts);
+        }
+    }
+  learner_created: true
+- name: src/contacts/action/actions/EditAction.java
+  visible: true
+  text: |
+    package contacts.action.actions;
+
+    import contacts.Contact;
+    import contacts.Contacts;
+    import contacts.action.ActionBase;
+
+    import java.util.LinkedHashMap;
+    import java.util.Map;
+    import java.util.Scanner;
+    import java.util.function.BiConsumer;
+
+    public class EditAction extends ActionBase {
+
+        private static final Map<String, BiConsumer<Contact, String>> CONSUMER_MAP = new LinkedHashMap<>() {{
+            put("name", Contact::setName);
+            put("surname", Contact::setSurname);
+            put("number", Contact::setPhone);
+        }};
+
+        public EditAction(Contacts contacts, Scanner scanner) {
+            super(contacts, scanner);
+        }
+
+        @Override
+        public void execute() {
+            if (contacts.size() == 0) {
+                System.out.println("No records to edit!");
+                return;
+            }
+            System.out.println(contacts);
+            System.out.print("Select a record: ");
+            int index = -1 + Integer.parseInt(scanner.nextLine());
+            Contact contact = contacts.getContactByIndex(index);
+
+            System.out.print("Select a field (name, surname, number): ");
+            String field = scanner.nextLine();
+            System.out.printf("Enter %s: ", field);
+            CONSUMER_MAP.get(field).accept(contact, scanner.nextLine());
+            if (field.equals("number")) {
+                alertWrongNumber(contact);
+            }
+            System.out.println("The record updated!");
+        }
+    }
+  learner_created: true
+- name: src/contacts/Contacts.java
+  visible: true
+  text: |
+    package contacts;
+
+    import java.util.ArrayList;
+    import java.util.List;
+    import java.util.stream.Collectors;
+    import java.util.stream.IntStream;
+
+    public class Contacts {
+        private final List<Contact> storage = new ArrayList<>();
+
+        public void saveContact(Contact contact) {
+            storage.add(contact);
+        }
+
+        public int size() {
+            return storage.size();
+        }
+
+        public void remove(int index) {
+            storage.remove(index);
+        }
+
+        public Contact getContactByIndex(int index) {
+            return storage.get(index);
+        }
+
+        @Override
+        public String toString() {
+            return IntStream.rangeClosed(1, size())
+                    .mapToObj(i -> String.format("%d. %s", i, storage.get(i - 1).toString()))
+                    .collect(Collectors.joining("\n"));
+        }
+    }
+  learner_created: true
+- name: src/contacts/action/actions/AddAction.java
+  visible: true
+  text: |
+    package contacts.action.actions;
+
+    import contacts.Contact;
+    import contacts.Contacts;
+    import contacts.action.ActionBase;
+
+    import java.util.LinkedHashMap;
+    import java.util.Map;
+    import java.util.Scanner;
+    import java.util.function.BiConsumer;
+
+    public class AddAction extends ActionBase {
+
+        private static final Map<String, BiConsumer<Contact.Builder, String>> CONSUMER_MAP = new LinkedHashMap<>() {{
+            put("Enter the name: ", Contact.Builder::setName);
+            put("Enter the surname: ", Contact.Builder::setSurname);
+            put("Enter the number: ", Contact.Builder::setPhone);
+        }};
+
+
+        public AddAction(Contacts contacts, Scanner scanner) {
+            super(contacts, scanner);
+        }
+
+        @Override
+        public void execute() {
+            Contact.Builder builder = new Contact.Builder();
+            CONSUMER_MAP.forEach((prompt, consumer) -> {
+                System.out.print(prompt);
+                consumer.accept(builder, scanner.nextLine());
+            });
+            Contact contact = builder.build();
+            alertWrongNumber(contact);
+            contacts.saveContact(contact);
+            System.out.println("The record added.");
+        }
+    }
+  learner_created: true
+- name: src/contacts/action/actions/CountAction.java
+  visible: true
+  text: |
+    package contacts.action.actions;
+
+    import contacts.Contacts;
+    import contacts.action.ActionBase;
+
+    public class CountAction extends ActionBase {
+
+        public CountAction(Contacts contacts) {
+            super(contacts, null);
+        }
+
+        @Override
+        public void execute() {
+            System.out.printf("The Phone Book has %d records.\n", contacts.size());
+        }
+    }
+  learner_created: true
+- name: src/contacts/ContactInteractionFacade.java
+  visible: true
+  text: |
+    package contacts;
+
+    import contacts.action.Action;
+    import contacts.action.ActionEnum;
+    import contacts.action.ActionInvoker;
+    import contacts.action.actions.*;
+
+    import java.util.Map;
+    import java.util.Scanner;
+
+    public class ContactInteractionFacade {
+
+        private static ActionEnum getAction(Scanner scanner) {
+            System.out.print("Enter action (add, remove, edit, count, list, exit): ");
+            return ActionEnum.fromString(scanner.nextLine());
+        }
+
+        public static void stage2() {
+            try (Scanner scanner = new Scanner(System.in)) {
+                Contacts contacts = new Contacts();
+
+                Map<ActionEnum, Action> actionMap = Map.of(
+                        ActionEnum.ADD, new AddAction(contacts, scanner),
+                        ActionEnum.REMOVE, new RemoveAction(contacts, scanner),
+                        ActionEnum.EDIT, new EditAction(contacts, scanner),
+                        ActionEnum.COUNT, new CountAction(contacts),
+                        ActionEnum.LIST, new ListAction(contacts),
+                        ActionEnum.EXIT, () -> {}
+                );
+
+                ActionEnum actionEnum = getAction(scanner);
+                ActionInvoker invoker = new ActionInvoker(actionMap.get(actionEnum));
+
+                while (ActionEnum.EXIT != actionEnum) {
+                    invoker.executeAction();
+
+                    actionEnum = getAction(scanner);
+                    invoker.setAction(actionMap.get(actionEnum));
+                }
+            }
+        }
+    }
+  learner_created: true
+- name: src/contacts/action/Action.java
+  visible: true
+  text: |
+    package contacts.action;
+
+    public interface Action {
+        void execute();
+    }
+  learner_created: true
+- name: src/contacts/action/ActionInvoker.java
+  visible: true
+  text: |
+    package contacts.action;
+
+    public class ActionInvoker {
+        private Action action;
+
+        public ActionInvoker(Action action) {
+            this.action = action;
+        }
+
+        public void setAction(Action action) {
+            this.action = action;
+        }
+
+        public void executeAction() {
+            action.execute();
+        }
+    }
+  learner_created: true
+- name: src/contacts/Contact.java
+  visible: true
+  text: |
+    package contacts;
+
+    public class Contact {
+
+        private String name;
+        private String surname;
+        private String phone = "";
+
+        private Contact() { }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public String getSurname() {
+            return surname;
+        }
+
+        public void setSurname(String surname) {
+            this.surname = surname;
+        }
+
+        public String getPhone() {
+            return phone;
+        }
+
+        public void setPhone(String phone) {
+            this.phone = checkPhone(phone) ? phone : "";
+        }
+
+        public boolean hasNumber() {
+            return !phone.isEmpty();
+        }
+
+        private static boolean checkPhone(String phone) {
+            return phone.matches("^\\+?(((\\(\\w+\\))([- ]\\w{2,})?)|((\\w+)([- ]\\(\\w{2,}\\))?))([- ]\\w{2,})*$");
+        }
+
+        @Override
+        public String toString() {
+            return String.format("%s %s, %s", name, surname, hasNumber() ? phone : "[no number]");
+        }
+
+        public static class Builder {
+            private String name;
+            private String surname;
+            private String phone = "";
+
+            public void setName(String name) {
+                this.name = name;
+            }
+
+            public void setSurname(String surname) {
+                this.surname = surname;
+            }
+
+            public void setPhone(String phone) {
+                this.phone = phone;
+            }
+
+            public Contact build() {
+                Contact contact = new Contact();
+                contact.setName(name);
+                contact.setSurname(surname);
+                contact.setPhone(phone);
+                return contact;
+            }
+        }
+    }
+  learner_created: true
+- name: src/contacts/contact/PersonContact.java
+  visible: true
+  learner_created: true
+- name: src/contacts/contact/OrganizationContact.java
+  visible: true
+  learner_created: true
+- name: src/contacts/contact/BaseContact.java
+  visible: true
+  learner_created: true
+- name: src/contacts/action/actions/add/AddAction.java
+  visible: true
+  learner_created: true
+- name: src/contacts/action/actions/add/UpdateFactoryMethod.java
+  visible: true
+  learner_created: true
 feedback_link: https://hyperskill.org/projects/43/stages/230/implement#comment
 status: Unchecked
 record: -1

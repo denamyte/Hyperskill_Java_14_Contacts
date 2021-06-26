@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Scanner;
 import java.util.function.BiConsumer;
 
+@Deprecated
 public class EditAction extends ActionBase {
 
     private static final Map<String, BiConsumer<Contact, String>> CONSUMER_MAP = new LinkedHashMap<>() {{

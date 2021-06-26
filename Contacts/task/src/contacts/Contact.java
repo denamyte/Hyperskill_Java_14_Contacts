@@ -1,5 +1,6 @@
 package contacts;
 
+@Deprecated
 public class Contact {
 
     private String name;

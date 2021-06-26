@@ -11,11 +11,11 @@ import java.util.Scanner;
 public class ContactInteractionFacade {
 
     private static ActionEnum getAction(Scanner scanner) {
-        System.out.print("Enter action (add, remove, edit, count, list, exit): ");
+        System.out.print("Enter action (add, remove, edit, count, info, exit): ");
         return ActionEnum.fromString(scanner.nextLine());
     }
 
-    public static void stage2() {
+    public static void stage3() {
         try (Scanner scanner = new Scanner(System.in)) {
             Contacts contacts = new Contacts();
 
@@ -24,7 +24,7 @@ public class ContactInteractionFacade {
                     ActionEnum.REMOVE, new RemoveAction(contacts, scanner),
                     ActionEnum.EDIT, new EditAction(contacts, scanner),
                     ActionEnum.COUNT, new CountAction(contacts),
-                    ActionEnum.LIST, new ListAction(contacts),
+                    ActionEnum.INFO, new ListAction(contacts),
                     ActionEnum.EXIT, () -> {}
             );
 
