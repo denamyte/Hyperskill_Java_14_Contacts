@@ -15,6 +15,7 @@ public abstract class ActionBase implements Action {
         this.scanner = scanner;
     }
 
+    @Deprecated
     protected void alertWrongNumber(Contact contact) {
         if (!contact.hasNumber()) {
             System.out.println("Wrong number format!");

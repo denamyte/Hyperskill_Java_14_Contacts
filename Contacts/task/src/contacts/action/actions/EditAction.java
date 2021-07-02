@@ -24,22 +24,22 @@ public class EditAction extends ActionBase {
 
     @Override
     public void execute() {
-        if (contacts.size() == 0) {
-            System.out.println("No records to edit!");
-            return;
-        }
-        System.out.println(contacts);
-        System.out.print("Select a record: ");
-        int index = -1 + Integer.parseInt(scanner.nextLine());
-        Contact contact = contacts.getContactByIndex(index);
-
-        System.out.print("Select a field (name, surname, number): ");
-        String field = scanner.nextLine();
-        System.out.printf("Enter %s: ", field);
-        CONSUMER_MAP.get(field).accept(contact, scanner.nextLine());
-        if (field.equals("number")) {
-            alertWrongNumber(contact);
-        }
-        System.out.println("The record updated!");
+//        if (contacts.size() == 0) {
+//            System.out.println("No records to edit!");
+//            return;
+//        }
+//        System.out.println(contacts);
+//        System.out.print("Select a record: ");
+//        int index = -1 + Integer.parseInt(scanner.nextLine());
+//        Contact contact = contacts.getContactByIndex(index);
+//
+//        System.out.print("Select a field (name, surname, number): ");
+//        String field = scanner.nextLine();
+//        System.out.printf("Enter %s: ", field);
+//        CONSUMER_MAP.get(field).accept(contact, scanner.nextLine());
+//        if (field.equals("number")) {
+//            alertWrongNumber(contact);
+//        }
+//        System.out.println("The record updated!");
     }
 }

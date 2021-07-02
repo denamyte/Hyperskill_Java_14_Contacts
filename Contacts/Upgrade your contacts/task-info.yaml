@@ -387,47 +387,6 @@ files:
         }
     }
   learner_created: true
-- name: src/contacts/action/actions/AddAction.java
-  visible: true
-  text: |
-    package contacts.action.actions;
-
-    import contacts.Contact;
-    import contacts.Contacts;
-    import contacts.action.ActionBase;
-
-    import java.util.LinkedHashMap;
-    import java.util.Map;
-    import java.util.Scanner;
-    import java.util.function.BiConsumer;
-
-    public class AddAction extends ActionBase {
-
-        private static final Map<String, BiConsumer<Contact.Builder, String>> CONSUMER_MAP = new LinkedHashMap<>() {{
-            put("Enter the name: ", Contact.Builder::setName);
-            put("Enter the surname: ", Contact.Builder::setSurname);
-            put("Enter the number: ", Contact.Builder::setPhone);
-        }};
-
-
-        public AddAction(Contacts contacts, Scanner scanner) {
-            super(contacts, scanner);
-        }
-
-        @Override
-        public void execute() {
-            Contact.Builder builder = new Contact.Builder();
-            CONSUMER_MAP.forEach((prompt, consumer) -> {
-                System.out.print(prompt);
-                consumer.accept(builder, scanner.nextLine());
-            });
-            Contact contact = builder.build();
-            alertWrongNumber(contact);
-            contacts.saveContact(contact);
-            System.out.println("The record added.");
-        }
-    }
-  learner_created: true
 - name: src/contacts/action/actions/CountAction.java
   visible: true
   text: |
@@ -610,10 +569,25 @@ files:
 - name: src/contacts/contact/BaseContact.java
   visible: true
   learner_created: true
-- name: src/contacts/action/actions/add/AddAction.java
+- name: src/contacts/action/actions/factories/AddOrgContactFactoryMethod.java
   visible: true
   learner_created: true
-- name: src/contacts/action/actions/add/UpdateFactoryMethod.java
+- name: src/contacts/action/actions/factories/AddPersonContactFactoryMethod.java
+  visible: true
+  learner_created: true
+- name: src/contacts/action/actions/factories/BasicOrgContactFactoryMethod.java
+  visible: true
+  learner_created: true
+- name: src/contacts/action/actions/factories/BasicPersonContactFactoryMethod.java
+  visible: true
+  learner_created: true
+- name: src/contacts/action/actions/factories/UpdateOrgContactFactoryMethod.java
+  visible: true
+  learner_created: true
+- name: src/contacts/action/actions/AddAction.java
+  visible: true
+  learner_created: true
+- name: src/contacts/action/actions/factories/BasicContactFactoryMethod.java
   visible: true
   learner_created: true
 feedback_link: https://hyperskill.org/projects/43/stages/230/implement#comment

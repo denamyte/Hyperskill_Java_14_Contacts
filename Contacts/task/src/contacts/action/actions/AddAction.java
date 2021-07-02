@@ -1,38 +1,50 @@
 package contacts.action.actions;
 
-import contacts.Contact;
 import contacts.Contacts;
 import contacts.action.ActionBase;
+import contacts.action.actions.factories.AddOrgContactFactoryMethod;
+import contacts.action.actions.factories.AddPersonContactFactoryMethod;
+import contacts.action.actions.factories.BasicContactFactoryMethod;
+import contacts.contact.BaseContact;
+import contacts.contact.OrganizationContact;
+import contacts.contact.PersonContact;
 
-import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Scanner;
-import java.util.function.BiConsumer;
+import java.util.function.Supplier;
 
-@Deprecated
 public class AddAction extends ActionBase {
 
-    private static final Map<String, BiConsumer<Contact.Builder, String>> CONSUMER_MAP = new LinkedHashMap<>() {{
-        put("Enter the name: ", Contact.Builder::setName);
-        put("Enter the surname: ", Contact.Builder::setSurname);
-        put("Enter the number: ", Contact.Builder::setPhone);
-    }};
+    private static final Map<Type, Supplier<BaseContact>> CONTACT_SUPPLIER_MAP = Map.of(
+            Type.PERSON, PersonContact::new,
+            Type.ORGANIZATION, OrganizationContact::new
+    );
 
+    private final Map<Type, BasicContactFactoryMethod> factoryMethodMap;
 
     public AddAction(Contacts contacts, Scanner scanner) {
         super(contacts, scanner);
+        factoryMethodMap = Map.of(
+                Type.PERSON, new AddPersonContactFactoryMethod(scanner),
+                Type.ORGANIZATION, new AddOrgContactFactoryMethod(scanner)
+        );
     }
 
     @Override
     public void execute() {
-        Contact.Builder builder = new Contact.Builder();
-        CONSUMER_MAP.forEach((prompt, consumer) -> {
-            System.out.print(prompt);
-            consumer.accept(builder, scanner.nextLine());
-        });
-        Contact contact = builder.build();
-        alertWrongNumber(contact);
+        System.out.print("Enter the type (person, organization): ");
+        Type type = Type.valueOf(scanner.nextLine());
+
+        BasicContactFactoryMethod factoryMethod = factoryMethodMap.get(type);
+        factoryMethod.setContact(CONTACT_SUPPLIER_MAP.get(type).get());
+
+        BaseContact contact = factoryMethod.updateContact();
+        contact.iniTimeCreated();
         contacts.saveContact(contact);
-        System.out.println("The record added.");
+        System.out.println("The record added.\n");
+    }
+
+    enum Type {
+        PERSON, ORGANIZATION
     }
 }

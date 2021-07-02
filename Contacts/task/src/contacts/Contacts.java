@@ -1,14 +1,16 @@
 package contacts;
 
+import contacts.contact.BaseContact;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class Contacts {
-    private final List<Contact> storage = new ArrayList<>();
+    private final List<BaseContact> storage = new ArrayList<>();
 
-    public void saveContact(Contact contact) {
+    public void saveContact(BaseContact contact) {
         storage.add(contact);
     }
 
@@ -20,7 +22,7 @@ public class Contacts {
         storage.remove(index);
     }
 
-    public Contact getContactByIndex(int index) {
+    public BaseContact getContactByIndex(int index) {
         return storage.get(index);
     }
 

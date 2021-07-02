@@ -24,20 +24,20 @@ public abstract class BaseContact {
         this.phone = matchPhoneTemplate(phone) ? phone : null;
     }
 
-    public LocalDateTime getTimeCreatedString() {
+    public LocalDateTime getTimeCreated() {
         return timeCreated;
     }
 
     public void iniTimeCreated() {
         timeCreated = LocalDateTime.now();
-        iniTimeLastEdit();
+        timeLastEdit = timeCreated;
     }
 
     public LocalDateTime getTimeLastEdit() {
         return timeLastEdit;
     }
 
-    public void iniTimeLastEdit() {
+    public void updateTimeLastEdit() {
         timeLastEdit = LocalDateTime.now();
     }
 
