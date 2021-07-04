@@ -1,4 +1,4 @@
-package contacts.action.actions.factories;
+package contacts.action.actions.factories.person;
 
 import contacts.contact.BaseContact;
 

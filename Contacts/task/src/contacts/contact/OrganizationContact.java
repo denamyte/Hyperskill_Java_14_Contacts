@@ -15,4 +15,11 @@ public class OrganizationContact extends BaseContact {
     public String getListTitle() {
         return getName();
     }
+
+    @Override
+    public String toString() {
+        return "Organization name: " + name + "\n"
+                + "Address: " + address + "\n"
+                + super.toString();
+    }
 }

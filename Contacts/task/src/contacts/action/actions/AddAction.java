@@ -2,9 +2,9 @@ package contacts.action.actions;
 
 import contacts.Contacts;
 import contacts.action.ActionBase;
-import contacts.action.actions.factories.AddOrgContactFactoryMethod;
-import contacts.action.actions.factories.AddPersonContactFactoryMethod;
 import contacts.action.actions.factories.BasicContactFactoryMethod;
+import contacts.action.actions.factories.org.AddOrgContactFactoryMethod;
+import contacts.action.actions.factories.person.AddPersonContactFactoryMethod;
 import contacts.contact.BaseContact;
 import contacts.contact.OrganizationContact;
 import contacts.contact.PersonContact;
@@ -33,7 +33,7 @@ public class AddAction extends ActionBase {
     @Override
     public void execute() {
         System.out.print("Enter the type (person, organization): ");
-        Type type = Type.valueOf(scanner.nextLine());
+        Type type = Type.valueOf(scanner.nextLine().toUpperCase());
 
         BasicContactFactoryMethod factoryMethod = factoryMethodMap.get(type);
         factoryMethod.setContact(CONTACT_SUPPLIER_MAP.get(type).get());

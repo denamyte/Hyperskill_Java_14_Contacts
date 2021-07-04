@@ -1,5 +1,6 @@
-package contacts.action.actions.factories;
+package contacts.action.actions.factories.person;
 
+import contacts.action.actions.factories.BasicContactFactoryMethod;
 import contacts.contact.PersonContact;
 
 import java.util.Scanner;

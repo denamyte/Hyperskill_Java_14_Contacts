@@ -282,26 +282,6 @@ files:
         }
     }
   learner_created: true
-- name: src/contacts/action/actions/ListAction.java
-  visible: true
-  text: |
-    package contacts.action.actions;
-
-    import contacts.Contacts;
-    import contacts.action.ActionBase;
-
-    public class ListAction extends ActionBase {
-
-        public ListAction(Contacts contacts) {
-            super(contacts, null);
-        }
-
-        @Override
-        public void execute() {
-            System.out.println(contacts);
-        }
-    }
-  learner_created: true
 - name: src/contacts/action/actions/EditAction.java
   visible: true
   text: |
@@ -569,27 +549,53 @@ files:
 - name: src/contacts/contact/BaseContact.java
   visible: true
   learner_created: true
-- name: src/contacts/action/actions/factories/AddOrgContactFactoryMethod.java
-  visible: true
-  learner_created: true
-- name: src/contacts/action/actions/factories/AddPersonContactFactoryMethod.java
-  visible: true
-  learner_created: true
-- name: src/contacts/action/actions/factories/BasicOrgContactFactoryMethod.java
-  visible: true
-  learner_created: true
-- name: src/contacts/action/actions/factories/BasicPersonContactFactoryMethod.java
-  visible: true
-  learner_created: true
-- name: src/contacts/action/actions/factories/UpdateOrgContactFactoryMethod.java
-  visible: true
-  learner_created: true
 - name: src/contacts/action/actions/AddAction.java
   visible: true
   learner_created: true
 - name: src/contacts/action/actions/factories/BasicContactFactoryMethod.java
   visible: true
   learner_created: true
+- name: src/contacts/action/actions/factories/org/AddOrgContactFactoryMethod.java
+  visible: true
+  learner_created: true
+- name: src/contacts/action/actions/factories/person/AddPersonContactFactoryMethod.java
+  visible: true
+  learner_created: true
+- name: src/contacts/action/actions/factories/org/BasicOrgContactFactoryMethod.java
+  visible: true
+  learner_created: true
+- name: src/contacts/action/actions/factories/person/BasicPersonContactFactoryMethod.java
+  visible: true
+  learner_created: true
+- name: src/contacts/action/actions/factories/org/UpdateOrgContactFactoryMethod.java
+  visible: true
+  learner_created: true
+- name: src/contacts/action/actions/factories/person/UpdatePersonContactFactoryMethod.java
+  visible: true
+  learner_created: true
+- name: src/contacts/action/actions/InfoAction.java
+  visible: true
+  text: |
+    package contacts.action.actions;
+
+    import contacts.Contacts;
+    import contacts.action.ActionBase;
+
+    public class ListAction extends ActionBase {
+
+        public ListAction(Contacts contacts) {
+            super(contacts, null);
+        }
+
+        @Override
+        public void execute() {
+            System.out.println(contacts);
+        }
+    }
+  learner_created: true
 feedback_link: https://hyperskill.org/projects/43/stages/230/implement#comment
-status: Unchecked
+status: Solved
+feedback:
+  message: Congratulations!
+  time: Sun, 04 Jul 2021 23:37:46 UTC
 record: -1

@@ -21,6 +21,6 @@ public class RemoveAction extends ActionBase {
         System.out.print("Select a record: ");
         int index = -1 + Integer.parseInt(scanner.nextLine());
         contacts.remove(index);
-        System.out.println("The record removed!");
+        System.out.println("The record removed!\n");
     }
 }

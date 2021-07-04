@@ -29,7 +29,7 @@ public class Contacts {
     @Override
     public String toString() {
         return IntStream.rangeClosed(1, size())
-                .mapToObj(i -> String.format("%d. %s", i, storage.get(i - 1).toString()))
+                .mapToObj(i -> String.format("%d. %s", i, storage.get(i - 1).getListTitle()))
                 .collect(Collectors.joining("\n"));
     }
 }

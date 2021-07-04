@@ -25,18 +25,18 @@ public class ContactInteractionFacade {
                     ActionEnum.REMOVE, new RemoveAction(contacts, scanner),
                     ActionEnum.EDIT, new EditAction(contacts, scanner),
                     ActionEnum.COUNT, new CountAction(contacts),
-                    ActionEnum.INFO, new ListAction(contacts),
+                    ActionEnum.INFO, new InfoAction(contacts, scanner),
                     ActionEnum.EXIT, () -> {}
             );
 
-            ActionEnum actionEnum = getAction(scanner);
-            ActionInvoker invoker = new ActionInvoker(actionMap.get(actionEnum));
+            ActionEnum action = getAction(scanner);
+            ActionInvoker invoker = new ActionInvoker(actionMap.get(action));
 
-            while (ActionEnum.EXIT != actionEnum) {
+            while (ActionEnum.EXIT != action) {
                 invoker.executeAction();
 
-                actionEnum = getAction(scanner);
-                invoker.setAction(actionMap.get(actionEnum));
+                action = getAction(scanner);
+                invoker.setAction(actionMap.get(action));
             }
         }
     }

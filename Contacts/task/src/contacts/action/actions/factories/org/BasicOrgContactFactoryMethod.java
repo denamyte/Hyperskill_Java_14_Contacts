@@ -1,12 +1,11 @@
-package contacts.action.actions.factories;
+package contacts.action.actions.factories.org;
 
+import contacts.action.actions.factories.BasicContactFactoryMethod;
 import contacts.contact.OrganizationContact;
 
 import java.util.Scanner;
 
 public abstract class BasicOrgContactFactoryMethod extends BasicContactFactoryMethod {
-
-
 
     public BasicOrgContactFactoryMethod(Scanner scanner) {
         super(scanner);

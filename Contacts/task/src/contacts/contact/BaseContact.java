@@ -3,10 +3,10 @@ package contacts.contact;
 import java.time.LocalDateTime;
 
 public abstract class BaseContact {
-    private String name;
-    private String phone;
-    private LocalDateTime timeCreated;
-    private LocalDateTime timeLastEdit;
+    protected String name;
+    protected String phone;
+    protected LocalDateTime timeCreated;
+    protected LocalDateTime timeLastEdit;
 
     public String getName() {
         return name;
@@ -45,9 +45,15 @@ public abstract class BaseContact {
         return phone.matches("^\\+?(((\\(\\w+\\))([- ]\\w{2,})?)|((\\w+)([- ]\\(\\w{2,}\\))?))([- ]\\w{2,})*$");
     }
 
-    protected <T> String checkData(T data) {
+    protected <T> String valueOrNoData(T data) {
         return data == null ? "[no data]" : data.toString();
     }
 
     public abstract String getListTitle();
+
+    public String toString() {
+        return "Number: " + valueOrNoData(phone) + "\n"
+                + "Time created: " + timeCreated + "\n"
+                + "Time last edit: " + timeLastEdit + "\n";
+    }
 }

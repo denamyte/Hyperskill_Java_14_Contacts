@@ -11,6 +11,6 @@ public class CountAction extends ActionBase {
 
     @Override
     public void execute() {
-        System.out.printf("The Phone Book has %d records.\n", contacts.size());
+        System.out.printf("The Phone Book has %d records.%n%n", contacts.size());
     }
 }

@@ -1,45 +1,48 @@
 package contacts.action.actions;
 
-import contacts.Contact;
 import contacts.Contacts;
 import contacts.action.ActionBase;
+import contacts.action.actions.factories.BasicContactFactoryMethod;
+import contacts.action.actions.factories.org.UpdateOrgContactFactoryMethod;
+import contacts.action.actions.factories.person.UpdatePersonContactFactoryMethod;
+import contacts.contact.BaseContact;
+import contacts.contact.OrganizationContact;
+import contacts.contact.PersonContact;
 
-import java.util.LinkedHashMap;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
-import java.util.function.BiConsumer;
 
-@Deprecated
 public class EditAction extends ActionBase {
 
-    private static final Map<String, BiConsumer<Contact, String>> CONSUMER_MAP = new LinkedHashMap<>() {{
-        put("name", Contact::setName);
-        put("surname", Contact::setSurname);
-        put("number", Contact::setPhone);
-    }};
+    private final Map<Class<? extends BaseContact>, BasicContactFactoryMethod> factoryMethodMap = new HashMap<>(2);
 
     public EditAction(Contacts contacts, Scanner scanner) {
         super(contacts, scanner);
+        factoryMethodMap.put(OrganizationContact.class, new UpdateOrgContactFactoryMethod(scanner));
+        factoryMethodMap.put(PersonContact.class, new UpdatePersonContactFactoryMethod(scanner));
     }
 
     @Override
     public void execute() {
-//        if (contacts.size() == 0) {
-//            System.out.println("No records to edit!");
-//            return;
-//        }
-//        System.out.println(contacts);
-//        System.out.print("Select a record: ");
-//        int index = -1 + Integer.parseInt(scanner.nextLine());
-//        Contact contact = contacts.getContactByIndex(index);
-//
-//        System.out.print("Select a field (name, surname, number): ");
-//        String field = scanner.nextLine();
-//        System.out.printf("Enter %s: ", field);
-//        CONSUMER_MAP.get(field).accept(contact, scanner.nextLine());
-//        if (field.equals("number")) {
-//            alertWrongNumber(contact);
-//        }
-//        System.out.println("The record updated!");
+        System.out.println(contacts);  // Print a short list of contacts
+
+        if (contacts.size() == 0) {
+            System.out.println("No records to edit\n");
+            return;
+        }
+
+        System.out.print("Select a record: ");
+        String rawStr = scanner.nextLine();
+
+        int index = -1 + Integer.parseInt(rawStr);
+        BaseContact contact = contacts.getContactByIndex(index);
+
+        BasicContactFactoryMethod factoryMethod = factoryMethodMap.get(contact.getClass());
+        factoryMethod.setContact(contact);
+        factoryMethod.updateContact();
+
+        contact.updateTimeLastEdit();
+        System.out.println("The record updated!\n");
     }
 }

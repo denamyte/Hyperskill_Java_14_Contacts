@@ -41,7 +41,16 @@ public class PersonContact extends BaseContact {
         return String.format("%s %s", getName(), getSurname());
     }
 
-    public static enum Gender {
+    @Override
+    public String toString() {
+        return "Name: " + name + "\n"
+                + "Surname: " + surname + "\n"
+                + "Birth date: " + valueOrNoData(birthDate)  + "\n"
+                + "Gender: " + valueOrNoData(gender) + "\n"
+                + super.toString();
+    }
+
+    public enum Gender {
         M, F;
 
         public static Gender fromStr(String s) {

@@ -1,5 +1,6 @@
-package contacts.action.actions.factories;
+package contacts.action.actions.factories.org;
 
+import contacts.action.actions.factories.BasicContactFactoryMethod;
 import contacts.contact.BaseContact;
 
 import java.util.Map;
@@ -13,21 +14,16 @@ public class UpdateOrgContactFactoryMethod extends BasicOrgContactFactoryMethod 
             "address", BasicOrgContactFactoryMethod::addAddress,
             "number", BasicContactFactoryMethod::addNumber
     );
-    private String field;
 
     public UpdateOrgContactFactoryMethod(Scanner scanner) {
         super(scanner);
     }
 
-    public void setField(String field) {
-        this.field = field;
-    }
-
     @Override
     public BaseContact updateContact() {
-        UPD_METHODS.get(field).accept(this);
+        System.out.print("Select a field (name, address, number): ");
+
+        UPD_METHODS.get(scanner.nextLine()).accept(this);
         return contact;
     }
-
-    // TODO: 7/3/21 Modify this class and create UpdatePersonContactFactoryMethod
 }
