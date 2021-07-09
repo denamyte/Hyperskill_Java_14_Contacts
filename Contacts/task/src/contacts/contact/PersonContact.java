@@ -4,6 +4,8 @@ import java.time.LocalDate;
 
 public class PersonContact extends BaseContact {
 
+    private static final long serialVersionUID = 7557756253989621039L;
+
     private String surname;
     private LocalDate birthDate;
     private Gender gender;
@@ -39,6 +41,11 @@ public class PersonContact extends BaseContact {
     @Override
     public String getListTitle() {
         return String.format("%s %s", getName(), getSurname());
+    }
+
+    @Override
+    public void updateSearchField() {
+        searchField = String.join("|||", name, phone, surname);
     }
 
     @Override

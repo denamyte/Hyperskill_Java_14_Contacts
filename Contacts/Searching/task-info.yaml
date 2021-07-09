@@ -202,6 +202,749 @@ files:
     \        }\n        catch (Exception ex) {\n            return new CheckResult(false,\
     \ \"Can't check the answer\");\n        }\n    }\n}\n"
   learner_created: false
+- name: src/contacts/action/actions/RemoveAction.java
+  visible: true
+  text: |
+    package contacts.action.actions;
+
+    import contacts.Contacts;
+    import contacts.action.ActionBase;
+
+    import java.util.Scanner;
+
+    public class RemoveAction extends ActionBase {
+
+        public RemoveAction(Contacts contacts, Scanner scanner) {
+            super(contacts, scanner);
+        }
+
+        @Override
+        public void execute() {
+            if (contacts.size() == 0) {
+                System.out.println("No records to remove!");
+                return;
+            }
+            System.out.println(contacts);
+            System.out.print("Select a record: ");
+            int index = -1 + Integer.parseInt(scanner.nextLine());
+            contacts.remove(index);
+            System.out.println("The record removed!\n");
+        }
+    }
+  learner_created: true
+- name: src/contacts/action/actions/factories/person/AddPersonContactFactoryMethod.java
+  visible: true
+  text: |
+    package contacts.action.actions.factories.person;
+
+    import contacts.contact.BaseContact;
+
+    import java.util.Scanner;
+
+    public class AddPersonContactFactoryMethod extends BasicPersonContactFactoryMethod {
+
+        public AddPersonContactFactoryMethod(Scanner scanner) {
+            super(scanner);
+        }
+
+        @Override
+        public BaseContact updateContact() {
+            addName();
+            addSurname();
+            addBirthDate();
+            addGender();
+            addNumber();
+            return contact;
+        }
+    }
+  learner_created: true
+- name: src/contacts/action/actions/factories/person/UpdatePersonContactFactoryMethod.java
+  visible: true
+  text: |
+    package contacts.action.actions.factories.person;
+
+    import contacts.action.actions.factories.BasicContactFactoryMethod;
+    import contacts.contact.BaseContact;
+
+    import java.util.Map;
+    import java.util.Scanner;
+    import java.util.function.Consumer;
+
+    public class UpdatePersonContactFactoryMethod extends BasicPersonContactFactoryMethod {
+
+        private static final Map<String, Consumer<UpdatePersonContactFactoryMethod>> UPD_METHODS = Map.of(
+                "name", BasicPersonContactFactoryMethod::addName,
+                "surname", BasicPersonContactFactoryMethod::addSurname,
+                "birth", BasicPersonContactFactoryMethod::addBirthDate,
+                "gender", BasicPersonContactFactoryMethod::addGender,
+                "number", BasicContactFactoryMethod::addNumber
+        );
+
+        public UpdatePersonContactFactoryMethod(Scanner scanner) {
+            super(scanner);
+        }
+
+        @Override
+        public BaseContact updateContact() {
+            System.out.print("Select a field (name, surname, birth, gender, number): ");
+
+            UPD_METHODS.get(scanner.nextLine()).accept(this);
+            return contact;
+        }
+    }
+  learner_created: true
+- name: src/contacts/action/actions/factories/BasicContactFactoryMethod.java
+  visible: true
+  text: |
+    package contacts.action.actions.factories;
+
+    import contacts.contact.BaseContact;
+
+    import java.util.Scanner;
+
+    public abstract class BasicContactFactoryMethod {
+
+        protected Scanner scanner;
+        protected BaseContact contact;
+
+        public BasicContactFactoryMethod(Scanner scanner) {
+            this.scanner = scanner;
+        }
+
+        public abstract BaseContact updateContact();
+
+        public abstract void addName();
+
+        public void addNumber() {
+            System.out.print("Enter the number: ");
+            contact.setPhone(scanner.nextLine());
+            if (contact.getPhone() == null) {
+                System.out.println("Bad phone!");
+            }
+        }
+
+        public void setContact(BaseContact contact) {
+            this.contact = contact;
+        }
+    }
+  learner_created: true
+- name: src/contacts/action/ActionBase.java
+  visible: true
+  text: |
+    package contacts.action;
+
+    import contacts.Contacts;
+
+    import java.util.Scanner;
+
+    public abstract class ActionBase implements Action {
+
+        protected Contacts contacts;
+        protected Scanner scanner;
+
+        public ActionBase(Contacts contacts, Scanner scanner) {
+            this.contacts = contacts;
+            this.scanner = scanner;
+        }
+    }
+  learner_created: true
+- name: src/contacts/contact/PersonContact.java
+  visible: true
+  text: |
+    package contacts.contact;
+
+    import java.time.LocalDate;
+
+    public class PersonContact extends BaseContact {
+
+        private String surname;
+        private LocalDate birthDate;
+        private Gender gender;
+
+        public String getSurname() {
+            return surname;
+        }
+
+        public void setSurname(String surname) {
+            this.surname = surname;
+        }
+
+        public LocalDate getBirthDate() {
+            return birthDate;
+        }
+
+        public void setBirthDate(String birthDate) {
+            try {
+                this.birthDate = LocalDate.parse(birthDate);
+            } catch (Exception e) {
+                this.birthDate = null;
+            }
+        }
+
+        public Gender getGender() {
+            return gender;
+        }
+
+        public void setGender(Gender gender) {
+            this.gender = gender;
+        }
+
+        @Override
+        public String getListTitle() {
+            return String.format("%s %s", getName(), getSurname());
+        }
+
+        @Override
+        public String toString() {
+            return "Name: " + name + "\n"
+                    + "Surname: " + surname + "\n"
+                    + "Birth date: " + valueOrNoData(birthDate)  + "\n"
+                    + "Gender: " + valueOrNoData(gender) + "\n"
+                    + super.toString();
+        }
+
+        public enum Gender {
+            M, F;
+
+            public static Gender fromStr(String s) {
+                try {
+                    return valueOf(s);
+                } catch (IllegalArgumentException e) {
+                    return null;
+                }
+            }
+        }
+    }
+  learner_created: true
+- name: src/contacts/action/actions/factories/org/UpdateOrgContactFactoryMethod.java
+  visible: true
+  text: |
+    package contacts.action.actions.factories.org;
+
+    import contacts.action.actions.factories.BasicContactFactoryMethod;
+    import contacts.contact.BaseContact;
+
+    import java.util.Map;
+    import java.util.Scanner;
+    import java.util.function.Consumer;
+
+    public class UpdateOrgContactFactoryMethod extends BasicOrgContactFactoryMethod {
+
+        private static final Map<String, Consumer<UpdateOrgContactFactoryMethod>> UPD_METHODS = Map.of(
+                "name", BasicOrgContactFactoryMethod::addName,
+                "address", BasicOrgContactFactoryMethod::addAddress,
+                "number", BasicContactFactoryMethod::addNumber
+        );
+
+        public UpdateOrgContactFactoryMethod(Scanner scanner) {
+            super(scanner);
+        }
+
+        @Override
+        public BaseContact updateContact() {
+            System.out.print("Select a field (name, address, number): ");
+
+            UPD_METHODS.get(scanner.nextLine()).accept(this);
+            return contact;
+        }
+    }
+  learner_created: true
+- name: src/contacts/action/actions/EditAction.java
+  visible: true
+  text: |
+    package contacts.action.actions;
+
+    import contacts.Contacts;
+    import contacts.action.ActionBase;
+    import contacts.action.actions.factories.BasicContactFactoryMethod;
+    import contacts.action.actions.factories.org.UpdateOrgContactFactoryMethod;
+    import contacts.action.actions.factories.person.UpdatePersonContactFactoryMethod;
+    import contacts.contact.BaseContact;
+    import contacts.contact.OrganizationContact;
+    import contacts.contact.PersonContact;
+
+    import java.util.Map;
+    import java.util.Scanner;
+
+    public class EditAction extends ActionBase {
+
+        private Map<Class<? extends BaseContact>, BasicContactFactoryMethod> factoryMethodMap;
+
+        public EditAction(Contacts contacts, Scanner scanner) {
+            super(contacts, scanner);
+            factoryMethodMap = Map.of(
+                    OrganizationContact.class, new UpdateOrgContactFactoryMethod(scanner),
+                    PersonContact.class, new UpdatePersonContactFactoryMethod(scanner)
+            );
+        }
+
+        @Override
+        public void execute() {
+            if (contacts.size() == 0) {
+                System.out.println("No records to edit\n");
+                return;
+            }
+
+            System.out.println(contacts);  // Print a short list of contacts
+
+            System.out.print("Select a record: ");
+            String rawStr = scanner.nextLine();
+
+            int index = -1 + Integer.parseInt(rawStr);
+            BaseContact contact = contacts.getContactByIndex(index);
+
+            BasicContactFactoryMethod factoryMethod = factoryMethodMap.get(contact.getClass());
+            factoryMethod.setContact(contact);
+            factoryMethod.updateContact();
+
+            contact.updateTimeLastEdit();
+            System.out.println("The record updated!\n");
+        }
+    }
+  learner_created: true
+- name: src/contacts/Contacts.java
+  visible: true
+  text: |
+    package contacts;
+
+    import contacts.contact.BaseContact;
+
+    import java.util.ArrayList;
+    import java.util.List;
+    import java.util.stream.Collectors;
+    import java.util.stream.IntStream;
+
+    public class Contacts {
+        private final List<BaseContact> storage = new ArrayList<>();
+
+        public void saveContact(BaseContact contact) {
+            storage.add(contact);
+        }
+
+        public int size() {
+            return storage.size();
+        }
+
+        public void remove(int index) {
+            storage.remove(index);
+        }
+
+        public BaseContact getContactByIndex(int index) {
+            return storage.get(index);
+        }
+
+        @Override
+        public String toString() {
+            return IntStream.rangeClosed(1, size())
+                    .mapToObj(i -> String.format("%d. %s", i, storage.get(i - 1).getListTitle()))
+                    .collect(Collectors.joining("\n"));
+        }
+    }
+  learner_created: true
+- name: src/contacts/action/actions/AddAction.java
+  visible: true
+  text: |
+    package contacts.action.actions;
+
+    import contacts.Contacts;
+    import contacts.action.ActionBase;
+    import contacts.action.actions.factories.BasicContactFactoryMethod;
+    import contacts.action.actions.factories.org.AddOrgContactFactoryMethod;
+    import contacts.action.actions.factories.person.AddPersonContactFactoryMethod;
+    import contacts.contact.BaseContact;
+    import contacts.contact.OrganizationContact;
+    import contacts.contact.PersonContact;
+
+    import java.util.Map;
+    import java.util.Scanner;
+    import java.util.function.Supplier;
+
+    public class AddAction extends ActionBase {
+
+        private static final Map<Type, Supplier<BaseContact>> CONTACT_SUPPLIER_MAP = Map.of(
+                Type.PERSON, PersonContact::new,
+                Type.ORGANIZATION, OrganizationContact::new
+        );
+
+        private final Map<Type, BasicContactFactoryMethod> factoryMethodMap;
+
+        public AddAction(Contacts contacts, Scanner scanner) {
+            super(contacts, scanner);
+            factoryMethodMap = Map.of(
+                    Type.PERSON, new AddPersonContactFactoryMethod(scanner),
+                    Type.ORGANIZATION, new AddOrgContactFactoryMethod(scanner)
+            );
+        }
+
+        @Override
+        public void execute() {
+            System.out.print("Enter the type (person, organization): ");
+            Type type = Type.valueOf(scanner.nextLine().toUpperCase());
+
+            BasicContactFactoryMethod factoryMethod = factoryMethodMap.get(type);
+            factoryMethod.setContact(CONTACT_SUPPLIER_MAP.get(type).get());
+
+            BaseContact contact = factoryMethod.updateContact();
+            contact.iniTimeCreated();
+            contacts.saveContact(contact);
+            System.out.println("The record added.\n");
+        }
+
+        enum Type {
+            PERSON, ORGANIZATION
+        }
+    }
+  learner_created: true
+- name: src/contacts/action/actions/factories/org/AddOrgContactFactoryMethod.java
+  visible: true
+  text: |
+    package contacts.action.actions.factories.org;
+
+    import contacts.contact.BaseContact;
+
+    import java.util.Scanner;
+
+    public class AddOrgContactFactoryMethod extends BasicOrgContactFactoryMethod {
+
+        public AddOrgContactFactoryMethod(Scanner scanner) {
+            super(scanner);
+        }
+
+        @Override
+        public BaseContact updateContact() {
+            addName();
+            addAddress();
+            addNumber();
+            return contact;
+        }
+    }
+  learner_created: true
+- name: src/contacts/action/actions/InfoAction.java
+  visible: true
+  text: |
+    package contacts.action.actions;
+
+    import contacts.Contacts;
+    import contacts.action.ActionBase;
+
+    import java.util.Scanner;
+
+    public class InfoAction extends ActionBase {
+
+        public InfoAction(Contacts contacts, Scanner scanner) {
+            super(contacts, scanner);
+        }
+
+        @Override
+        public void execute() {
+            if (contacts.size() > 0) {
+                System.out.println(contacts);
+                System.out.print("Select a record: ");
+                int index = -1 + Integer.parseInt(scanner.nextLine());
+                System.out.println(contacts.getContactByIndex(index));
+            } else {
+                System.out.println();
+            }
+        }
+    }
+  learner_created: true
+- name: src/contacts/action/actions/CountAction.java
+  visible: true
+  text: |
+    package contacts.action.actions;
+
+    import contacts.Contacts;
+    import contacts.action.ActionBase;
+
+    public class CountAction extends ActionBase {
+
+        public CountAction(Contacts contacts) {
+            super(contacts, null);
+        }
+
+        @Override
+        public void execute() {
+            System.out.printf("The Phone Book has %d records.%n%n", contacts.size());
+        }
+    }
+  learner_created: true
+- name: src/contacts/contact/BaseContact.java
+  visible: true
+  text: |
+    package contacts.contact;
+
+    import java.time.LocalDateTime;
+
+    public abstract class BaseContact {
+        protected String name;
+        protected String phone;
+        protected LocalDateTime timeCreated;
+        protected LocalDateTime timeLastEdit;
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public String getPhone() {
+            return phone;
+        }
+
+        public void setPhone(String phone) {
+            this.phone = matchPhoneTemplate(phone) ? phone : null;
+        }
+
+        public LocalDateTime getTimeCreated() {
+            return timeCreated;
+        }
+
+        public void iniTimeCreated() {
+            timeCreated = LocalDateTime.now();
+            timeLastEdit = timeCreated;
+        }
+
+        public LocalDateTime getTimeLastEdit() {
+            return timeLastEdit;
+        }
+
+        public void updateTimeLastEdit() {
+            timeLastEdit = LocalDateTime.now();
+        }
+
+        private static boolean matchPhoneTemplate(String phone) {
+            return phone.matches("^\\+?(((\\(\\w+\\))([- ]\\w{2,})?)|((\\w+)([- ]\\(\\w{2,}\\))?))([- ]\\w{2,})*$");
+        }
+
+        protected <T> String valueOrNoData(T data) {
+            return data == null ? "[no data]" : data.toString();
+        }
+
+        public abstract String getListTitle();
+
+        public String toString() {
+            return "Number: " + valueOrNoData(phone) + "\n"
+                    + "Time created: " + timeCreated + "\n"
+                    + "Time last edit: " + timeLastEdit + "\n";
+        }
+    }
+  learner_created: true
+- name: src/contacts/contact/OrganizationContact.java
+  visible: true
+  text: |
+    package contacts.contact;
+
+    public class OrganizationContact extends BaseContact {
+        private String address;
+
+        public String getAddress() {
+            return address;
+        }
+
+        public void setAddress(String address) {
+            this.address = address;
+        }
+
+        @Override
+        public String getListTitle() {
+            return getName();
+        }
+
+        @Override
+        public String toString() {
+            return "Organization name: " + name + "\n"
+                    + "Address: " + address + "\n"
+                    + super.toString();
+        }
+    }
+  learner_created: true
+- name: src/contacts/ContactInteractionFacade.java
+  visible: true
+  text: |
+    package contacts;
+
+    import contacts.action.Action;
+    import contacts.action.ActionEnum;
+    import contacts.action.ActionInvoker;
+    import contacts.action.actions.*;
+    import contacts.action.actions.AddAction;
+
+    import java.util.Map;
+    import java.util.Scanner;
+
+    public class ContactInteractionFacade {
+
+        private static ActionEnum getAction(Scanner scanner) {
+            System.out.print("Enter action (add, remove, edit, count, info, exit): ");
+            return ActionEnum.fromString(scanner.nextLine());
+        }
+
+        public static void stage3() {
+            try (Scanner scanner = new Scanner(System.in)) {
+                Contacts contacts = new Contacts();
+
+                Map<ActionEnum, Action> actionMap = Map.of(
+                        ActionEnum.ADD, new AddAction(contacts, scanner),
+                        ActionEnum.REMOVE, new RemoveAction(contacts, scanner),
+                        ActionEnum.EDIT, new EditAction(contacts, scanner),
+                        ActionEnum.COUNT, new CountAction(contacts),
+                        ActionEnum.INFO, new InfoAction(contacts, scanner),
+                        ActionEnum.EXIT, () -> {}
+                );
+
+                ActionEnum action = getAction(scanner);
+                ActionInvoker invoker = new ActionInvoker(actionMap.get(action));
+
+                while (ActionEnum.EXIT != action) {
+                    invoker.executeAction();
+
+                    action = getAction(scanner);
+                    invoker.setAction(actionMap.get(action));
+                }
+            }
+        }
+    }
+  learner_created: true
+- name: src/contacts/action/Action.java
+  visible: true
+  text: |
+    package contacts.action;
+
+    public interface Action {
+        void execute();
+    }
+  learner_created: true
+- name: src/contacts/action/actions/factories/org/BasicOrgContactFactoryMethod.java
+  visible: true
+  text: |
+    package contacts.action.actions.factories.org;
+
+    import contacts.action.actions.factories.BasicContactFactoryMethod;
+    import contacts.contact.OrganizationContact;
+
+    import java.util.Scanner;
+
+    public abstract class BasicOrgContactFactoryMethod extends BasicContactFactoryMethod {
+
+        public BasicOrgContactFactoryMethod(Scanner scanner) {
+            super(scanner);
+        }
+
+        @Override
+        public void addName() {
+            System.out.print("Enter the organization name: ");
+            contact.setName(scanner.nextLine());
+        }
+
+        protected void addAddress() {
+            System.out.print("Enter the address: ");
+            ((OrganizationContact) contact).setAddress(scanner.nextLine());
+        }
+    }
+  learner_created: true
+- name: src/contacts/action/actions/factories/person/BasicPersonContactFactoryMethod.java
+  visible: true
+  text: |
+    package contacts.action.actions.factories.person;
+
+    import contacts.action.actions.factories.BasicContactFactoryMethod;
+    import contacts.contact.PersonContact;
+
+    import java.util.Scanner;
+
+    public abstract class BasicPersonContactFactoryMethod extends BasicContactFactoryMethod {
+
+        public BasicPersonContactFactoryMethod(Scanner scanner) {
+            super(scanner);
+        }
+
+        private PersonContact cast() {
+            return (PersonContact) contact;
+        }
+
+        @Override
+        public void addName() {
+            System.out.print("Enter the name: ");
+            contact.setName(scanner.nextLine());
+        }
+
+        protected void addSurname() {
+            System.out.print("Enter the surname: ");
+            cast().setSurname(scanner.nextLine());
+        }
+
+        protected void addBirthDate() {
+            System.out.print("Enter the birth date: ");
+            cast().setBirthDate(scanner.nextLine());
+            if (cast().getBirthDate() == null) {
+                System.out.println("Bad birth date!");
+            }
+        }
+
+        protected void addGender() {
+            System.out.print("Enter the gender (M, F): ");
+            cast().setGender(PersonContact.Gender.fromStr(scanner.nextLine()));
+            if (cast().getGender() == null) {
+                System.out.println("Bad gender!");
+            }
+        }
+
+    }
+  learner_created: true
+- name: src/contacts/action/ActionInvoker.java
+  visible: true
+  text: |
+    package contacts.action;
+
+    public class ActionInvoker {
+        private Action action;
+
+        public ActionInvoker(Action action) {
+            this.action = action;
+        }
+
+        public void setAction(Action action) {
+            this.action = action;
+        }
+
+        public void executeAction() {
+            action.execute();
+        }
+    }
+  learner_created: true
+- name: src/contacts/action/actions/ListAction.java
+  visible: true
+  learner_created: true
+- name: src/contacts/action/actions/SearchAction.java
+  visible: true
+  learner_created: true
+- name: src/contacts/action/actions/RecordAction.java
+  visible: true
+  learner_created: true
+- name: src/contacts/action/actions/factories/ActionFactory.java
+  visible: true
+  learner_created: true
+- name: src/contacts/action/ActionName.java
+  visible: true
+  text: |
+    package contacts.action;
+
+    public enum ActionEnum {
+        ADD, REMOVE, EDIT, COUNT, INFO, EXIT;
+
+        public static ActionEnum fromString(String s) {
+            return valueOf(s.toUpperCase());
+        }
+    }
+  learner_created: true
+- name: src/contacts/action/actions/DeleteAction.java
+  visible: true
+  learner_created: true
+- name: src/contacts/action/actions/ActionWithId.java
+  visible: true
+  learner_created: true
 feedback_link: https://hyperskill.org/projects/43/stages/231/implement#comment
 status: Unchecked
 record: -1

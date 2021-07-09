@@ -5,6 +5,7 @@ import contacts.action.ActionBase;
 
 import java.util.Scanner;
 
+@Deprecated
 public class InfoAction extends ActionBase {
 
     public InfoAction(Contacts contacts, Scanner scanner) {

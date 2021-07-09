@@ -1,43 +1,45 @@
 package contacts;
 
 import contacts.action.Action;
-import contacts.action.ActionEnum;
+import contacts.action.ActionName;
 import contacts.action.ActionInvoker;
-import contacts.action.actions.*;
-import contacts.action.actions.AddAction;
+import contacts.action.actions.factories.ActionFactory;
 
 import java.util.Map;
 import java.util.Scanner;
 
 public class ContactInteractionFacade {
 
-    private static ActionEnum getAction(Scanner scanner) {
-        System.out.print("Enter action (add, remove, edit, count, info, exit): ");
-        return ActionEnum.fromString(scanner.nextLine());
+    private static ActionName getActionName(Scanner scanner) {
+        System.out.print("[menu] Enter action (add, list, search, count, exit): ");
+        return ActionName.fromString(scanner.nextLine());
     }
 
-    public static void stage3() {
+    public static void stage4(String fileName) {
         try (Scanner scanner = new Scanner(System.in)) {
-            Contacts contacts = new Contacts();
+            Contacts contacts = Contacts.createOrLoadFromFile(fileName);
 
-            Map<ActionEnum, Action> actionMap = Map.of(
-                    ActionEnum.ADD, new AddAction(contacts, scanner),
-                    ActionEnum.REMOVE, new RemoveAction(contacts, scanner),
-                    ActionEnum.EDIT, new EditAction(contacts, scanner),
-                    ActionEnum.COUNT, new CountAction(contacts),
-                    ActionEnum.INFO, new InfoAction(contacts, scanner),
-                    ActionEnum.EXIT, () -> {}
+            ActionFactory acFac = new ActionFactory(contacts, scanner);
+
+            Map<ActionName, Action> actionMap = Map.of(
+                    ActionName.ADD, acFac.getAddAction(),
+                    ActionName.LIST, acFac.getListAction(),
+                    ActionName.SEARCH, acFac.getSearchAction(),
+                    ActionName.COUNT, acFac.getCountAction(),
+                    ActionName.EXIT, () -> {}
             );
 
-            ActionEnum action = getAction(scanner);
-            ActionInvoker invoker = new ActionInvoker(actionMap.get(action));
+            ActionName actionName = getActionName(scanner);
+            ActionInvoker invoker = new ActionInvoker(actionMap.get(actionName));
 
-            while (ActionEnum.EXIT != action) {
+            while (ActionName.EXIT != actionName) {
                 invoker.executeAction();
 
-                action = getAction(scanner);
-                invoker.setAction(actionMap.get(action));
+                actionName = getActionName(scanner);
+                invoker.setAction(actionMap.get(actionName));
             }
+        } catch (Exception ignored) {
         }
     }
+
 }

@@ -40,7 +40,10 @@ public class AddAction extends ActionBase {
 
         BaseContact contact = factoryMethod.updateContact();
         contact.iniTimeCreated();
+        contact.updateSearchField();
+
         contacts.saveContact(contact);
+        contacts.saveToFile();
         System.out.println("The record added.\n");
     }
 

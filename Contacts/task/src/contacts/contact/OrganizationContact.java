@@ -1,6 +1,9 @@
 package contacts.contact;
 
 public class OrganizationContact extends BaseContact {
+
+    private static final long serialVersionUID = -3862778480219431552L;
+
     private String address;
 
     public String getAddress() {
@@ -14,6 +17,11 @@ public class OrganizationContact extends BaseContact {
     @Override
     public String getListTitle() {
         return getName();
+    }
+
+    @Override
+    public void updateSearchField() {
+        searchField = String.join("|||", name, phone, address);
     }
 
     @Override

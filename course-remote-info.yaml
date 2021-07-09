@@ -3,7 +3,7 @@ hyperskill_project:
   ide_files: https://stepik.org/media/attachments/lesson/204791/additional_files.json
   is_template_based: false
   use_ide: true
-update_date: Sun, 04 Jul 2021 21:50:50 UTC
+update_date: Thu, 08 Jul 2021 21:34:57 UTC
 stages:
 - id: 228
   step: 5324
@@ -19,6 +19,8 @@ stages:
   is_completed: false
 topics:
   0:
+  - title: Write, compile, and run
+    theory_id: 3739
   - title: JVM, JRE, and JDK
     theory_id: 3499
   - title: Immutability
@@ -85,14 +87,6 @@ topics:
     theory_id: 3507
   - title: Switch statement
     theory_id: 3504
-  - title: Write, compile, and run
-    theory_id: 3739
-  - title: Errors in programs
-    theory_id: 3536
-  - title: What is an exception
-    theory_id: 3497
-  - title: NPE
-    theory_id: 1945
   - title: Sizes and ranges
     theory_id: 3532
   - title: Type casting
@@ -129,6 +123,12 @@ topics:
     theory_id: 8977
   - title: Parameters and options
     theory_id: 9746
+  - title: Errors in programs
+    theory_id: 3536
+  - title: What is an exception
+    theory_id: 3497
+  - title: NPE
+    theory_id: 1945
   - title: Running programs on your computer
     theory_id: 3746
   - title: IntelliJ Run Configurations
@@ -161,8 +161,6 @@ topics:
     theory_id: 3622
   - title: Objects
     theory_id: 4727
-  - title: Boxing and unboxing
-    theory_id: 3595
   - title: Static members
     theory_id: 3534
   - title: Hiding and overriding
@@ -171,13 +169,13 @@ topics:
     theory_id: 11514
   - title: Fields and methods in enum
     theory_id: 11523
+  - title: Boxing and unboxing
+    theory_id: 3595
   1:
   - title: The concept of patterns
     theory_id: 3611
   - title: Regexps basics
     theory_id: 7580
-  - title: Builder
-    theory_id: 5130
   - title: Regexps in Java
     theory_id: 3670
   - title: Sets, ranges, alternations
@@ -192,6 +190,8 @@ topics:
     theory_id: 3712
   - title: Match results
     theory_id: 3716
+  - title: Builder
+    theory_id: 5130
   - title: Protected modifier
     theory_id: 6692
   - title: Referencing subclass objects

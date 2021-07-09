@@ -1,12 +1,17 @@
 package contacts.contact;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
-public abstract class BaseContact {
+public abstract class BaseContact implements Serializable {
+    private static final long serialVersionUID = -7199725324115442086L;
+
     protected String name;
     protected String phone;
     protected LocalDateTime timeCreated;
     protected LocalDateTime timeLastEdit;
+
+    protected String searchField;
 
     public String getName() {
         return name;
@@ -50,6 +55,8 @@ public abstract class BaseContact {
     }
 
     public abstract String getListTitle();
+
+    public abstract void updateSearchField();
 
     public String toString() {
         return "Number: " + valueOrNoData(phone) + "\n"
