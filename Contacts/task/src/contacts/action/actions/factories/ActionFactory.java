@@ -3,32 +3,42 @@ package contacts.action.actions.factories;
 import contacts.Contacts;
 import contacts.action.Action;
 import contacts.action.actions.*;
+import contacts.action.actions.factories.org.AddOrgContactFactoryMethod;
+import contacts.action.actions.factories.org.UpdateOrgContactFactoryMethod;
+import contacts.action.actions.factories.person.AddPersonContactFactoryMethod;
+import contacts.action.actions.factories.person.UpdatePersonContactFactoryMethod;
+import contacts.contact.OrganizationContact;
+import contacts.contact.PersonContact;
 
+import java.util.Map;
 import java.util.Scanner;
 
 public class ActionFactory {
 
-    private final Contacts contacts;
-    private final Scanner scanner;
-
     private final AddAction addAction;
     private final ListAction listAction;
     private final CountAction countAction;
-    private final DeleteAction deleteAction;
-    private final EditAction editAction;
-    private final RecordAction recordAction;
     private final SearchAction searchAction;
 
     public ActionFactory(Contacts contacts, Scanner scanner) {
-        this.contacts = contacts;
-        this.scanner = scanner;
 
         addAction = new AddAction(contacts, scanner);
-        countAction = new CountAction(contacts);
-        editAction = new EditAction(contacts, scanner);
-        deleteAction = new DeleteAction(contacts);
+        addAction.setAddFactoryMethodMap(Map.of(
+                AddAction.Type.PERSON, new AddPersonContactFactoryMethod(scanner),
+                AddAction.Type.ORGANIZATION, new AddOrgContactFactoryMethod(scanner)
+        ));
 
-        recordAction = new RecordAction(contacts, scanner);
+        countAction = new CountAction(contacts);
+
+        EditAction editAction = new EditAction(contacts, scanner);
+        editAction.setUpdateFactoryMethodMap(Map.of(
+                OrganizationContact.class, new UpdateOrgContactFactoryMethod(scanner),
+                PersonContact.class, new UpdatePersonContactFactoryMethod(scanner)
+        ));
+
+        DeleteAction deleteAction = new DeleteAction(contacts);
+
+        RecordAction recordAction = new RecordAction(contacts, scanner);
         recordAction.setEditAction(editAction);
         recordAction.setDeleteAction(deleteAction);
 
@@ -53,17 +63,5 @@ public class ActionFactory {
 
     public Action getCountAction() {
         return countAction;
-    }
-
-    public EditAction getEditAction() {
-        return editAction;
-    }
-
-    public DeleteAction getDeleteAction() {
-        return deleteAction;
-    }
-
-    public RecordAction getRecordAction() {
-        return recordAction;
     }
 }

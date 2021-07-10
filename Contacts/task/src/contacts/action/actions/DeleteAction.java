@@ -11,6 +11,7 @@ public class DeleteAction extends ActionWithId {
     @Override
     public void execute() {
         contacts.remove(id);
+        System.out.println("Record deleted.");
         contacts.saveToFile();
     }
 }

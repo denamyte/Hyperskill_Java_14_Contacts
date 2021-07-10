@@ -19,9 +19,10 @@ public class ListAction extends ActionBase {
 
     @Override
     public void execute() {
-        if (contacts.size() > 0) {
-            System.out.println(contacts);
+        if (contacts.size() == 0) {
+            return;
         }
+        System.out.println(contacts);
         System.out.println();
         listMenu();
     }
@@ -35,5 +36,7 @@ public class ListAction extends ActionBase {
         }
         int i = -1 + Integer.parseInt(cmd);
         System.out.println(contacts.getContactByIndex(i));
+        recordAction.setId(i);
+        recordAction.execute();
     }
 }

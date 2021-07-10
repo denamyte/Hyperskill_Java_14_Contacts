@@ -7,6 +7,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -59,6 +60,13 @@ public class Contacts implements Serializable {
                 e.printStackTrace();
             }
         }
+    }
+
+    public int[] search(String query) {
+        String queryLC = query.toLowerCase(Locale.ROOT);
+        return IntStream.range(0, size())
+                .filter(i -> storage.get(i).getSearchField().contains(queryLC))
+                .toArray();
     }
 
     @Override

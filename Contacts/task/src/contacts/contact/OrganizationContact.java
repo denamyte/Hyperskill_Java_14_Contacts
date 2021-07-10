@@ -1,5 +1,7 @@
 package contacts.contact;
 
+import java.util.Locale;
+
 public class OrganizationContact extends BaseContact {
 
     private static final long serialVersionUID = -3862778480219431552L;
@@ -21,7 +23,7 @@ public class OrganizationContact extends BaseContact {
 
     @Override
     public void updateSearchField() {
-        searchField = String.join("|||", name, phone, address);
+        searchField = String.join("|||", name, phone, address).toLowerCase(Locale.ROOT);
     }
 
     @Override

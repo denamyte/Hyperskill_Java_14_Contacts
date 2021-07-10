@@ -1,6 +1,7 @@
 package contacts.contact;
 
 import java.time.LocalDate;
+import java.util.Locale;
 
 public class PersonContact extends BaseContact {
 
@@ -45,7 +46,7 @@ public class PersonContact extends BaseContact {
 
     @Override
     public void updateSearchField() {
-        searchField = String.join("|||", name, phone, surname);
+        searchField = String.join("|||", name, phone, surname).toLowerCase(Locale.ROOT);
     }
 
     @Override

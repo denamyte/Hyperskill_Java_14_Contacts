@@ -29,21 +29,17 @@ public abstract class BaseContact implements Serializable {
         this.phone = matchPhoneTemplate(phone) ? phone : null;
     }
 
-    public LocalDateTime getTimeCreated() {
-        return timeCreated;
-    }
-
     public void iniTimeCreated() {
         timeCreated = LocalDateTime.now();
         timeLastEdit = timeCreated;
     }
 
-    public LocalDateTime getTimeLastEdit() {
-        return timeLastEdit;
-    }
-
     public void updateTimeLastEdit() {
         timeLastEdit = LocalDateTime.now();
+    }
+
+    public String getSearchField() {
+        return searchField;
     }
 
     private static boolean matchPhoneTemplate(String phone) {

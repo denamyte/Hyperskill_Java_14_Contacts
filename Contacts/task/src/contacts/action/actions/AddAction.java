@@ -3,8 +3,6 @@ package contacts.action.actions;
 import contacts.Contacts;
 import contacts.action.ActionBase;
 import contacts.action.actions.factories.BasicContactFactoryMethod;
-import contacts.action.actions.factories.org.AddOrgContactFactoryMethod;
-import contacts.action.actions.factories.person.AddPersonContactFactoryMethod;
 import contacts.contact.BaseContact;
 import contacts.contact.OrganizationContact;
 import contacts.contact.PersonContact;
@@ -20,14 +18,14 @@ public class AddAction extends ActionBase {
             Type.ORGANIZATION, OrganizationContact::new
     );
 
-    private final Map<Type, BasicContactFactoryMethod> factoryMethodMap;
+    private Map<Type, BasicContactFactoryMethod> addFactoryMethodMap;
 
     public AddAction(Contacts contacts, Scanner scanner) {
         super(contacts, scanner);
-        factoryMethodMap = Map.of(
-                Type.PERSON, new AddPersonContactFactoryMethod(scanner),
-                Type.ORGANIZATION, new AddOrgContactFactoryMethod(scanner)
-        );
+    }
+
+    public void setAddFactoryMethodMap(Map<Type, BasicContactFactoryMethod> addFactoryMethodMap) {
+        this.addFactoryMethodMap = addFactoryMethodMap;
     }
 
     @Override
@@ -35,7 +33,7 @@ public class AddAction extends ActionBase {
         System.out.print("Enter the type (person, organization): ");
         Type type = Type.valueOf(scanner.nextLine().toUpperCase());
 
-        BasicContactFactoryMethod factoryMethod = factoryMethodMap.get(type);
+        BasicContactFactoryMethod factoryMethod = addFactoryMethodMap.get(type);
         factoryMethod.setContact(CONTACT_SUPPLIER_MAP.get(type).get());
 
         BaseContact contact = factoryMethod.updateContact();
@@ -47,7 +45,7 @@ public class AddAction extends ActionBase {
         System.out.println("The record added.\n");
     }
 
-    enum Type {
+    public enum Type {
         PERSON, ORGANIZATION
     }
 }
